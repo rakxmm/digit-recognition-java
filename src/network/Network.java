@@ -10,11 +10,14 @@ import network.layer.InputLayer;
 import network.layer.Layer;
 import network.layer.OutputLayer;
 
-import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+
 
 public class Network {
     private Layer[] layers;
@@ -32,10 +35,10 @@ public class Network {
         for (int i = 0; i < sizes.length; i++) {
             if (i == 0) {
                 this.layers[i] = new InputLayer(sizes[i]);
-                this.input = (InputLayer) this.layers[i];
+                this.input = (InputLayer)this.layers[i];
             } else if (i == sizes.length - 1) {
                 this.layers[i] = new OutputLayer(sizes[i], this.layers[i - 1]);
-                this.output = (OutputLayer) this.layers[i];
+                this.output = (OutputLayer)this.layers[i];
 
             } else {
                 this.layers[i] = new HiddenLayer(sizes[i], this.layers[i - 1]);
@@ -61,14 +64,14 @@ public class Network {
      * @param l vrstva, ktoru chceme pridat
      */
     private void addLayer(Layer l) {
-        var layers = new Layer[this.layers.length + 1];
+        var newLayers = new Layer[this.layers.length + 1];
 
         for (int i = 0; i < this.layers.length; i++) {
-            layers[i] = this.layers[i];
+            newLayers[i] = this.layers[i];
         }
 
-        layers[layers.length - 1] = l;
-        this.layers = layers;
+        newLayers[newLayers.length - 1] = l;
+        this.layers = newLayers;
     }
 
     /**
@@ -98,7 +101,7 @@ public class Network {
                 }
                 this.backpropagate(d.getLabel(), learningRate);
             }
-            System.out.printf("     Epoch %d, Success rate: %.2f%%! \n", i + 1, ((double) successful / dataset.size()) * 100);
+            System.out.printf("     Epoch %d, Success rate: %.2f%%! \n", i + 1, ((double)successful / dataset.size()) * 100);
         }
         System.out.println("Training process has stopped!");
         long s = (System.currentTimeMillis() - time) / 1000;
@@ -132,7 +135,7 @@ public class Network {
     public static Network load(String filePath) {
         Network network = new Network();
         System.out.println("Loading process has begun!");
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
             String line;
 
@@ -148,9 +151,9 @@ public class Network {
                             network.loadLayer(line);
                             var last = network.getLast();
                             if (last instanceof InputLayer) {
-                                network.setInputLayer((InputLayer) network.getLast());
+                                network.setInputLayer((InputLayer)network.getLast());
                             } else if (last instanceof OutputLayer) {
-                                network.setOutputLayer((OutputLayer) network.getLast());
+                                network.setOutputLayer((OutputLayer)network.getLast());
                             }
                             break;
                         case "Weights":
@@ -274,7 +277,7 @@ public class Network {
 
                 Array2D biases = layer.getBiases();
                 Array2D weights = layer.getWeights();
-                sb.append(String.format("%s:%d\n",layer.getName(), layer.getSize()));
+                sb.append(String.format("%s:%d\n", layer.getName(), layer.getSize()));
                 if (layer instanceof HiddenLayer hidden) {
                     sb.append(String.format("Activation:%s\n", hidden.getActivationFunction().toString()));
                 }

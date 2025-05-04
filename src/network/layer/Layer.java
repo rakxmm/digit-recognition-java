@@ -1,7 +1,6 @@
 package network.layer;
 
 import math.Array2D;
-import math.activationFunction.NeuralMathFunction;
 
 public abstract class Layer {
 

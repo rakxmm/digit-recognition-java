@@ -3,7 +3,6 @@ package network.layer;
 import math.Array2D;
 
 import math.activationFunction.NeuralMathFunction;
-import math.activationFunction.ReLU;
 import math.activationFunction.Sigmoid;
 
 public class HiddenLayer extends Layer {
@@ -60,20 +59,20 @@ public class HiddenLayer extends Layer {
         return this.z;
     }
 
-    public void backPropagate(Array2D delta, double learningRate) {
+    public void backPropagate(Array2D d, double learningRate) {
         var next = super.getNext();
         var nextWT = next.getWeights().transposed();
-        delta = nextWT.product(delta).hadamard(this.z.deactivate(this.activationFunction));
+        d = nextWT.product(d).hadamard(this.z.deactivate(this.activationFunction));
 
-        var nW = delta.product(this.getPrev().getOutput().transposed());
+        var nW = d.product(this.getPrev().getOutput().transposed());
         this.updateWeights(nW, learningRate);
 
-        this.updateBiases(delta, learningRate);
+        this.updateBiases(d, learningRate);
 
 
         var prev = this.getPrev();
         if (prev instanceof HiddenLayer hidden) {
-            hidden.backPropagate(delta, learningRate);
+            hidden.backPropagate(d, learningRate);
         }
     }
 

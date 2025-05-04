@@ -3,8 +3,15 @@ package math;
 
 import math.activationFunction.Deactivation;
 import math.activationFunction.NeuralMathFunction;
-import math.operations.*;
+import math.operations.Addition;
+import math.operations.Division;
+import math.operations.Multiplication;
+import math.operations.Operation;
+import math.operations.Subtraction;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 public class Array2D {
@@ -102,17 +109,17 @@ public class Array2D {
     }
 
     private Array2D function(NeuralMathFunction function, boolean activate) {
-        var array = this.copy().getArray();
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[i].length; j++) {
+        var copy = this.copy().getArray();
+        for (int i = 0; i < copy.length; i++) {
+            for (int j = 0; j < copy[i].length; j++) {
                 if (activate) {
-                    array[i][j] = function.activate(array[i][j]);
+                    copy[i][j] = function.activate(copy[i][j]);
                 } else {
-                    array[i][j] = function.deactivate(array[i][j]);
+                    copy[i][j] = function.deactivate(copy[i][j]);
                 }
             }
         }
-        return new Array2D(array);
+        return new Array2D(copy);
     }
 
 
@@ -216,5 +223,33 @@ public class Array2D {
 
     public Array2D copy() {
         return new Array2D(this.array);
+    }
+
+    /**
+     * Ulozi vektor do suboru.
+     * @param filePath cielova adresa suboru
+     */
+    public void saveMatrixToFile(String filePath) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+
+            int index = 1;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < this.height(); i++) {
+                for (int j = 0; j < this.width(); j++) {
+                    if (index % 28 == 0) {
+                        sb.append(String.format("%.1f\n", this.get(i, j)));
+                        bw.write(sb.toString());
+                        sb = new StringBuilder();
+                    } else {
+                        sb.append(String.format("%.1f, ", this.get(i, j)));
+                    }
+                    index++;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

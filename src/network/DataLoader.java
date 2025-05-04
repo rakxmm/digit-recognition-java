@@ -12,8 +12,15 @@ import java.util.List;
 
 public class DataLoader {
 
-    private DataLoader() {}
+    private DataLoader() {
 
+    }
+
+    /**
+     * Nacita data zo suboru.
+     * @param pathToFile adresa k suboru
+     * @return vrati data.
+     */
     public static List<Data> loadDataFromFile(String pathToFile) {
         System.out.println("Dataset loading process has begun!");
         List<Data> dataList = new ArrayList<>();

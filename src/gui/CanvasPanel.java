@@ -1,9 +1,13 @@
 package gui;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.ArrayList;
 
 
@@ -33,7 +37,7 @@ public class CanvasPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D)g;
         g2d.setColor(Color.white);
 
 
@@ -42,7 +46,7 @@ public class CanvasPanel extends JPanel {
 
         g2d.setColor(Color.black);
 
-        for (Point point : pointList) {
+        for (Point point : this.pointList) {
             CanvasPanel.paintPoint(point, g2d, this.brushSize);
         }
 
@@ -60,8 +64,8 @@ public class CanvasPanel extends JPanel {
     public ArrayList<Point> getImagePoints(int width, int height) {
         ArrayList<Point> scaled = new ArrayList<>();
         for (Point p : this.pointList) {
-            int x = (int)(p.x * ((double) width / this.getWidth()));
-            int y = (int)(p.y * ((double) height / this.getHeight()));
+            int x = (int)(p.x * ((double)width / this.getWidth()));
+            int y = (int)(p.y * ((double)height / this.getHeight()));
             scaled.add(new Point(x, y));
         }
         return scaled;

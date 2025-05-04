@@ -6,6 +6,6 @@ public class Division implements Operation {
         if (b == 0) {
             throw new DivisionException("Snazil si sa delit nulou!");
         }
-        return a/b;
+        return a / b;
     }
 }
