@@ -2,6 +2,7 @@ package network;
 
 import math.Array2D;
 import math.activationFunction.NeuralMathFunction;
+import math.activationFunction.ReLU;
 import math.activationFunction.Sigmoid;
 import network.data.Data;
 import network.layer.HiddenLayer;
@@ -21,6 +22,10 @@ public class Network {
     private OutputLayer output;
 
 
+    /**
+     * Vytvorenie instancie neuronovej siete.
+     * @param sizes velkosti danych vrstiev
+     */
     public Network(int... sizes) {
         this.layers = new Layer[sizes.length];
 
@@ -39,6 +44,9 @@ public class Network {
 
     }
 
+    /**
+     * Funkcia zabezpecuje feedforwarding, od prvej do poslednej vrstvy
+     */
     public void updateLayers() {
         for (Layer layer : this.layers) {
             if (layer instanceof HiddenLayer hidden) {
@@ -48,6 +56,10 @@ public class Network {
 
     }
 
+    /**
+     * Funkcia nam umoznuje pridat vrstvu do neuronovej siete
+     * @param l vrstva, ktoru chceme pridat
+     */
     private void addLayer(Layer l) {
         var layers = new Layer[this.layers.length + 1];
 
@@ -59,10 +71,19 @@ public class Network {
         this.layers = layers;
     }
 
+    /**
+     * @return vrati nam instanciu na poslednu vrstvu
+     */
     private Layer getLast() {
         return this.layers[this.layers.length - 1];
     }
 
+    /**
+     * Funkcia ma na starost vykonat trenovanie neuronovej siete.
+     * @param dataset odkaz na dataset, na ktorom budeme trenovat neuronovu siet.
+     * @param epochs pocet treningov.
+     * @param learningRate rychlost ucenia.
+     */
     public void train(List<Data> dataset, int epochs, double learningRate) {
         System.out.println("Training process has begun!");
         long time = System.currentTimeMillis();
@@ -84,18 +105,31 @@ public class Network {
         System.out.printf("Training lasted:  %d s.\n", s);
     }
 
+    /**
+     * Funkcia vykona spatnu propagaciu neuronovej siete. Od poslednej vrstvy po prvu.
+     * @param label vektor, ktory reprezentuje spravny vysledok inputu.
+     * @param learningRate, rychlost ucenia
+     */
     public void backpropagate(Array2D label, double learningRate) {
         this.output.backPropagate(label, learningRate);
     }
 
+    /**
+     * Otestuje neuronovu siet na nejakych datach.
+     * @param data, instancia dat
+     */
     public void test(Data data) {
         this.input.setInput(data.getDataMatrix());
         this.updateLayers();
         System.out.println(this.output.getPrediction().getMaxIndex());
     }
 
+    /**
+     * Nacita neuronovu siet zo suboru.
+     * @param filePath cielova cesta k suboru
+     * @return nacitanu neuronovu siet
+     */
     public static Network load(String filePath) {
-        // TO DO next
         Network network = new Network();
         System.out.println("Loading process has begun!");
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -158,22 +192,43 @@ public class Network {
         return network;
     }
 
+    /**
+     * Nastavi atribut pre vystupnu vrstvu.
+     * @param layer
+     */
     private void setOutputLayer(OutputLayer layer) {
         this.output = layer;
     }
 
+    /**
+     * Nastavi atribut pre vstupnu vrstvu.
+     * @param layer
+     */
     private void setInputLayer(InputLayer layer) {
         this.input = layer;
     }
 
+    /**
+     * @param activation nazov aktivacnej funkcie
+     * @return vrati instanciu aktivacnej funkcie
+     */
     private static NeuralMathFunction getActivationFunction(String activation) {
         switch (activation) {
             case "Sigmoid":
                 return new Sigmoid();
+            case "ReLU":
+                return new ReLU();
         }
         return null;
     }
 
+    /**
+     * Funkcia rozdeli data na vektor podla zadanych rozmerov.
+     * @param data data, ktore chceme rozdelit
+     * @param height pocet riadkov vo vektore
+     * @param width pocet stlpcov vo vektore
+     * @return vrati vektor, v ktorom su ulozene data
+     */
     private Array2D parseDataToArray(String data, int height, int width) {
         double[][] ar = new double[height][width];
 
@@ -187,7 +242,10 @@ public class Network {
         return new Array2D(ar);
     }
 
-
+    /**
+     * Nacita sa do neuronovej siete nova vrstva na zaklade prikazu.
+     * @param command prikaz podla, ktoreho urcime o aky proces a vrstvu ide
+     */
     private void loadLayer(String command) {
         var parts = command.split(":");
         switch (parts[1]) {
@@ -203,10 +261,10 @@ public class Network {
         }
     }
 
-
-
-
-
+    /**
+     * Ulozi neuronovu siet do suboru.
+     * @param filePath cielova adresa, kde chceme subor ulozit.
+     */
     public void save(String filePath) {
 
         System.out.println("Saving process has begun!");

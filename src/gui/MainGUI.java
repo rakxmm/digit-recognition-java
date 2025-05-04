@@ -72,9 +72,18 @@ public class MainGUI {
 
                 int response = chooser.showOpenDialog(null);
                 if (response == JFileChooser.APPROVE_OPTION) {
-
-                    MainGUI.this.network = Network.load(chooser.getSelectedFile().getAbsolutePath());
-
+                    var path = chooser.getSelectedFile().getAbsolutePath();
+                    String[] parts = path.split("/");
+                    String name = parts[parts.length - 1];
+                    MainGUI.this.network = Network.load(path);
+                    MainGUI.this.panel.setBorder(BorderFactory.createTitledBorder(
+                            BorderFactory.createEmptyBorder(),
+                            name,
+                            TitledBorder.CENTER,
+                            TitledBorder.TOP,
+                            new Font("Nirmala UI", 1,  10),
+                            Color.white
+                    ));
                 }
             }
         });
