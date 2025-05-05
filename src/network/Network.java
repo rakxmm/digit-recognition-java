@@ -279,7 +279,7 @@ public class Network {
                 Array2D weights = layer.getWeights();
                 sb.append(String.format("%s:%d\n", layer.getName(), layer.getSize()));
                 if (layer instanceof HiddenLayer hidden) {
-                    sb.append(String.format("Activation:%s\n", hidden.getActivationFunction().toString()));
+                    sb.append(String.format("Activation:%s\n", hidden.getActivationFunction().getName()));
                 }
                 if (biases != null) {
                     sb.append(String.format("Biases:%dx%d\n", biases.height(), biases.width()));

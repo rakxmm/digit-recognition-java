@@ -44,6 +44,9 @@ public class MainGUI {
 
     private Network network;
 
+    /**
+     * Vytvorenie instancie UI pre aplikaciu
+     */
     public MainGUI() {
 
         var dataList = DataLoader.loadDataFromFile("res/data/mnist_train.csv");
@@ -126,6 +129,7 @@ public class MainGUI {
 
             }
         });
+
         this.saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -146,6 +150,7 @@ public class MainGUI {
                 }
             }
         });
+
         this.canvasPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -169,6 +174,7 @@ public class MainGUI {
                 }
             }
         });
+
         this.testButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -189,14 +195,17 @@ public class MainGUI {
                     CanvasPanel.paintPoint(point, g, 2);
                 }
                 int id = new Random().nextInt();
-                try {
-                    File output = new File("res/digits/" + id + ".png");
-                    ImageIO.write(image, "png", output);
-
-                    System.out.println("Image saved!");
-                } catch (IOException er) {
-                    er.printStackTrace();
-                }
+                /**
+                 * Pre ulozenie obrazka do suboru.
+                 */
+//                try {
+//                    File output = new File("res/digits/" + id + ".png");
+//                    ImageIO.write(image, "png", output);
+//
+//                    System.out.println("Image saved!");
+//                } catch (IOException er) {
+//                    er.printStackTrace();
+//                }
 
                 var a = ImageConvertor.getImageMatrix(image);
                 a.saveMatrixToFile("res/digits/" + id);
@@ -206,7 +215,9 @@ public class MainGUI {
         });
     }
 
-
+    /**
+     * Pridanie vlastnych komponentov do UI
+     */
     private void createUIComponents() {
         // TODO: place custom component creation code here
         this.canvasPanel = new CanvasPanel(20);

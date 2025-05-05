@@ -1,7 +1,6 @@
 package math;
 
 
-import math.activationFunction.Deactivation;
 import math.activationFunction.NeuralMathFunction;
 import math.operations.Addition;
 import math.operations.Division;
@@ -215,10 +214,6 @@ public class Array2D {
 
         return new Array2D(transposedMatrix);
 
-    }
-
-    public Array2D deactivate(Deactivation deactivation) {
-        return null;
     }
 
     public Array2D copy() {

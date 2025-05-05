@@ -1,6 +1,6 @@
 package math.activationFunction;
 
-public class Sigmoid extends NeuralMathFunction {
+public class Sigmoid implements NeuralMathFunction {
     @Override
     public double deactivate(double z) {
         var activated = this.activate(z);
@@ -13,7 +13,7 @@ public class Sigmoid extends NeuralMathFunction {
     }
 
     @Override
-    public String toString() {
+    public String getName() {
         return "Sigmoid";
     }
 }
