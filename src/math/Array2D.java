@@ -16,54 +16,98 @@ import java.util.Random;
 public class Array2D {
     private final double[][] array;
 
+    /**
+     * Vytvori instanciu nulovej matice s danymi parametrami
+     * @param height pocet riadkov
+     * @param width pocet stlpcov
+     */
     public Array2D(int height, int width) {
         this.array = new double[height][width];
     }
 
+    /**
+     * Vytvori maticu podla dvojrozmerneho pola
+     * @param array double[][]
+     */
     public Array2D(double[][] array) {
         this.array = array;
     }
 
+    /**
+     * Vytvori transponovany vektor danej velkosti
+     * @param height velkost vektora
+     */
     public Array2D(int height) {
         this.array = new double[height][1];
     }
 
+    /**
+     * Getter na prvok matice
+     * @param row ktory riadok
+     * @param col ktory stlpec
+     * @return double prvok
+     */
     public double get(int row, int col) {
         return this.array[row][col];
     }
 
+    /**
+     * Scita dve Array2D
+     * @param b Array2D
+     * @return
+     */
     public Array2D add(Array2D b) {
         return this.oneToOneCompute(b, new Addition());
     }
 
+    /**
+     * Prida vsetkym prvkom konstantu
+     * @param c konstanta double
+     * @return Array2D
+     */
     public Array2D add(double c) {
         return this.oneToOneCompute(c, new Addition());
     }
 
+    /**
+     * Odcita dve Array2D
+     * @param b Array2D
+     * @return
+     */
     public Array2D subtract(Array2D b) {
         return this.oneToOneCompute(b, new Subtraction());
     }
 
+    /**
+     * Odobere vsetkym prvkom konstantu
+     * @param c konstanta double
+     * @return Array2D
+     */
     public Array2D subtract(double c) {
         return this.oneToOneCompute(c, new Subtraction());
     }
 
+    /**
+     * Vykona hadamardov sucin pre dve Array2D
+     * @param b Array2D
+     * @return Array2D
+     */
     public Array2D hadamard(Array2D b) {
         return this.oneToOneCompute(b, new Multiplication());
     }
 
+    /**
+     * Vynasobi Array2D konstantou
+     * @param c konstanta double
+     * @return Array2D
+     */
     public Array2D multiply(double c) {
         return this.oneToOneCompute(c, new Multiplication());
     }
 
-    public Array2D divide(Array2D b) {
-        return this.oneToOneCompute(b, new Division());
-    }
-
-    public Array2D divide(double c) {
-        return this.oneToOneCompute(c, new Division());
-    }
-
+    /**
+     * Priradi nahodne prvky pre maticu
+     */
     public void randomize() {
         Random r = new Random();
 
@@ -75,6 +119,12 @@ public class Array2D {
 
     }
 
+    /**
+     * Vykona operaciu pre maticu a konstantu
+     * @param c konstanta
+     * @param op operacia
+     * @return Array2D
+     */
     private Array2D oneToOneCompute(double c, Operation op) {
         var copy = this.copy().getArray();
         for (int i = 0; i < this.height(); i++) {
@@ -85,6 +135,12 @@ public class Array2D {
         return new Array2D(copy);
     }
 
+    /**
+     * Vykona operaciu pre dve matice
+     * @param b druha matica
+     * @param op operacia
+     * @return Array2D
+     */
     private Array2D oneToOneCompute(Array2D b, Operation op) {
         if (!Shape.equals(this, b)) {
             throw new Array2DDimensionsMismatch("Snazis sa operovat s poliami roznych velkosti!");
@@ -99,14 +155,30 @@ public class Array2D {
         return new Array2D(copy);
     }
 
+    /**
+     * Vykona aktivaciu na celu maticu
+     * @param function aktivacna funkcia
+     * @return Array2D
+     */
     public Array2D activate(NeuralMathFunction function) {
         return this.function(function, true);
     }
 
+    /**
+     * Vykona deaktivaciu na celu maticu
+     * @param function aktivacna funkcia
+     * @return Array2D
+     */
     public Array2D deactivate(NeuralMathFunction function) {
         return this.function(function, false);
     }
 
+    /**
+     * Vykona de/aktivaciu na celu maticu podla parametra
+     * @param activate boolean, true - aktivacia, false - deaktivacia
+     * @param function aktivacna funkcia
+     * @return Array2D
+     */
     private Array2D function(NeuralMathFunction function, boolean activate) {
         var copy = this.copy().getArray();
         for (int i = 0; i < copy.length; i++) {
@@ -121,15 +193,26 @@ public class Array2D {
         return new Array2D(copy);
     }
 
-
+    /**
+     * Getter na pocet stlpcov
+     * @return int
+     */
     public int height() {
         return this.array.length;
     }
 
+    /**
+     * Getter na pocet riadkov
+     * @return int
+     */
     public int width() {
         return this.array[0].length;
     }
 
+    /**
+     * Getter na pole matice
+     * @return double[][]
+     */
     private double[][] getArray() {
         var copy = new double[this.height()][this.width()];
 
@@ -142,6 +225,10 @@ public class Array2D {
         return copy;
     }
 
+    /**
+     * Vrati index najvacsej hodnoty
+     * @return int
+     */
     public int getMaxIndex() {
 
         double max = 0;
@@ -158,7 +245,11 @@ public class Array2D {
 
     }
 
-
+    /**
+     * Vykona nasobenie dvoch matic
+     * @param b Array2D
+     * @return
+     */
     public Array2D product(Array2D b) {
         if (this.width() != b.height()) {
             Shape.shape(this);
@@ -179,6 +270,10 @@ public class Array2D {
         return new Array2D(result);
     }
 
+    /**
+     * Textova forma matice
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -202,7 +297,10 @@ public class Array2D {
         return sb.toString();
     }
 
-
+    /**
+     * Transponuje maticu
+     * @return  Array2D
+     */
     public Array2D transposed() {
         double[][] transposedMatrix = new double[this.width()][this.height()];
 
@@ -216,6 +314,10 @@ public class Array2D {
 
     }
 
+    /**
+     * Vrati novu kopiu matice
+     * @return Array2D
+     */
     public Array2D copy() {
         return new Array2D(this.array);
     }

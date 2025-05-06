@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class MainGUI {
     private JPanel mainPanel;
@@ -145,7 +146,6 @@ public class MainGUI {
 
                 if (response == JFileChooser.APPROVE_OPTION) {
                     String filePath = chooser.getSelectedFile().getAbsolutePath();
-                    System.out.println();
                     n.save(filePath);
                 }
             }
@@ -201,15 +201,19 @@ public class MainGUI {
 //                try {
 //                    File output = new File("res/digits/" + id + ".png");
 //                    ImageIO.write(image, "png", output);
-//
 //                    System.out.println("Image saved!");
 //                } catch (IOException er) {
 //                    er.printStackTrace();
 //                }
 
                 var a = ImageConvertor.getImageMatrix(image);
-                a.saveMatrixToFile("res/digits/" + id);
-                n.test(new Digit(a, 0));
+//                a.saveMatrixToFile("res/digits/" + id);
+
+                if (n == null) {
+                    JOptionPane.showMessageDialog(null, "No network has been loaded!");
+                } else {
+                    n.test(new Digit(a));
+                }
 
             }
         });

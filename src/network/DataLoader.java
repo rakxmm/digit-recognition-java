@@ -1,12 +1,10 @@
 package network;
 
 import math.Array2D;
-import network.data.Data;
 import network.data.digits.Digit;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +19,17 @@ public class DataLoader {
      * @param pathToFile adresa k suboru
      * @return vrati data.
      */
-    public static List<Data> loadDataFromFile(String pathToFile) {
-        System.out.println("Dataset loading process has begun!");
-        List<Data> dataList = new ArrayList<>();
+    public static List<Digit> loadDataFromFile(String pathToFile) {
+        JOptionPane.showMessageDialog(null, "Dataset loading process has begun!");
+        List<Digit> dataList = new ArrayList<>();
 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
+        try (InputStream is = ClassLoader.getSystemResourceAsStream(pathToFile)) {
+            if (is == null) {
+                JOptionPane.showMessageDialog(null, "Dataset loading process has failed!");
+                return null;
+            }
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line = "";
 
             while ((line = br.readLine()) != null) {
@@ -36,15 +39,15 @@ public class DataLoader {
                 for (int i = 1; i < parts.length; i++) {
                     array[i - 1][0] = Double.parseDouble(parts[i]);
                 }
-
-                dataList.add(new Digit(new Array2D(array), label));
+                var a = new Array2D(array);
+                dataList.add(new Digit(a, label));
             }
 
 
         } catch (IOException e) {
-            System.out.println("Failed to find the specific file!");
+            JOptionPane.showMessageDialog(null, "Failed to find the specific file!");
         }
-        System.out.println("Dataset loading process has ended!");
+        JOptionPane.showMessageDialog(null, "Dataset loading process has ended!");
         return dataList;
     }
 }

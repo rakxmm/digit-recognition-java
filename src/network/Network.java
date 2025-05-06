@@ -4,12 +4,13 @@ import math.Array2D;
 import math.activationFunction.NeuralMathFunction;
 import math.activationFunction.ReLU;
 import math.activationFunction.Sigmoid;
-import network.data.Data;
+import network.data.digits.Digit;
 import network.layer.HiddenLayer;
 import network.layer.InputLayer;
 import network.layer.Layer;
 import network.layer.OutputLayer;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -87,25 +88,28 @@ public class Network {
      * @param epochs pocet treningov.
      * @param learningRate rychlost ucenia.
      */
-    public void train(List<Data> dataset, int epochs, double learningRate) {
-        System.out.println("Training process has begun!");
+    public void train(List<Digit> dataset, int epochs, double learningRate) {
+        if (dataset == null) {
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Training process has begun!");
         long time = System.currentTimeMillis();
         for (int i = 0; i < epochs; i++) {
             int successful = 0;
             Collections.shuffle(dataset);
-            for (Data d : dataset) {
-                this.input.setInput(d.getDataMatrix());
+            for (Digit d : dataset) {
+                this.input.setInput(d.getData());
                 this.updateLayers();
                 if (this.output.getPrediction().getMaxIndex() == d.getLabel().getMaxIndex()) {
                     successful++;
                 }
                 this.backpropagate(d.getLabel(), learningRate);
             }
-            System.out.printf("     Epoch %d, Success rate: %.2f%%! \n", i + 1, ((double)successful / dataset.size()) * 100);
+            JOptionPane.showMessageDialog(null, String.format("Epoch %d, Success rate: %.2f%%! \n", i + 1, ((double)successful / dataset.size()) * 100));
         }
-        System.out.println("Training process has stopped!");
+        JOptionPane.showMessageDialog(null, "Training process has stopped!");
         long s = (System.currentTimeMillis() - time) / 1000;
-        System.out.printf("Training lasted:  %d s.\n", s);
+        JOptionPane.showMessageDialog(null, String.format("Training lasted:  %d s.\n", s));
     }
 
     /**
@@ -121,10 +125,10 @@ public class Network {
      * Otestuje neuronovu siet na nejakych datach.
      * @param data, instancia dat
      */
-    public void test(Data data) {
-        this.input.setInput(data.getDataMatrix());
+    public void test(Digit data) {
+        this.input.setInput(data.getData());
         this.updateLayers();
-        System.out.println(this.output.getPrediction().getMaxIndex());
+        JOptionPane.showMessageDialog(null, "The guessed number is: " + this.output.getPrediction().getMaxIndex());
     }
 
     /**
@@ -134,7 +138,7 @@ public class Network {
      */
     public static Network load(String filePath) {
         Network network = new Network();
-        System.out.println("Loading process has begun!");
+        JOptionPane.showMessageDialog(null, "Loading process has begun!");
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
             String line;
@@ -188,9 +192,9 @@ public class Network {
 
 
         } catch (IOException e) {
-            System.out.println("Failed to find the specific file!");
+            JOptionPane.showMessageDialog(null, "Failed to find the specific file!");
         }
-        System.out.println("Loading process has ended successfully!");
+        JOptionPane.showMessageDialog(null, "Loading process has ended successfully!");
 
         return network;
     }
@@ -270,7 +274,7 @@ public class Network {
      */
     public void save(String filePath) {
 
-        System.out.println("Saving process has begun!");
+        JOptionPane.showMessageDialog(null, "Saving process has begun!");
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             StringBuilder sb = new StringBuilder();
             for (Layer layer : this.layers) {
@@ -315,9 +319,9 @@ public class Network {
             bw.write(sb.toString());
 
         } catch (IOException e) {
-            System.out.println("Error @saveSettings");
+            JOptionPane.showMessageDialog(null, "Error @saveSettings");
         }
-        System.out.println("Saving process has stopped!");
+        JOptionPane.showMessageDialog(null, "Saving process has stopped!");
     }
 
 
